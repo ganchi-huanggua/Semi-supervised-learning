@@ -8,6 +8,14 @@ class LoggingHook(Hook):
     """
     Logging Hook for print information and log into tensorboard
     """
+    def before_run(self, algorithm):
+        # algorithm.print_fn(f"Trainable Params: ")
+        trainable_params_count = dict()
+        for name, param in algorithm.model.named_parameters():
+            if param.requires_grad:
+                trainable_params_count[name] = param.numel()
+        algorithm.print_fn(f"Trainable Params: {trainable_params_count}")
+
     def after_train_step(self, algorithm):
         """must be called after evaluation"""
         if self.every_n_iters(algorithm, algorithm.num_eval_iter):

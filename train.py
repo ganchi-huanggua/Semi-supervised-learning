@@ -151,7 +151,7 @@ def get_config():
     parser.add_argument(
         "--include_lb_to_ulb",
         type=str2bool,
-        default="True",
+        default="False",  # fixme: original value is True
         help="flag of including labeled data into unlabeled data, default to True",
     )
 
@@ -224,8 +224,9 @@ def get_config():
         "fastest way to use PyTorch for either single node or "
         "multi node data parallel training",
     )
+
     # config file
-    parser.add_argument("--c", type=str, default="")
+    parser.add_argument("--c", type=str, default="config/classic_cv/fixmatch/fixmatch_cifar10_vpt_1_0.yaml")
 
     # add algorithm specific parameters
     args = parser.parse_args()
@@ -367,7 +368,7 @@ def main_worker(gpu, ngpus_per_node, args):
         model = get_imb_algorithm(args, _net_builder, tb_log, logger)
     else:
         model = get_algorithm(args, _net_builder, tb_log, logger)
-    logger.info(f"Number of Trainable Params: {count_parameters(model.model)}")
+    # logger.info(f"Number of Trainable Params: {count_parameters(model.model)}")
 
     # SET Devices for (Distributed) DataParallel
     model.model = send_model_cuda(args, model.model)

@@ -31,6 +31,13 @@ class ParamUpdateHook(Hook):
             algorithm.loss_scaler.update()
         else:
             loss.backward()
+
+            # fixme
+            if algorithm.it == 1 or algorithm.it == 5124:
+                for name, param in algorithm.model.named_parameters():
+                    if param.grad is not None:
+                        print(f"Layer: {name}, Grad: {param.grad.view(-1)[:10]}")
+
             if (algorithm.clip_grad > 0):
                 torch.nn.utils.clip_grad_norm_(algorithm.model.parameters(), algorithm.clip_grad)
             algorithm.optimizer.step()

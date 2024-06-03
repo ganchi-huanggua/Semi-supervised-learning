@@ -173,3 +173,14 @@ def random_subsample(wav: np.ndarray, max_length: float, sample_rate: int = 1600
         return wav
     random_offset = random.randint(0, len(wav) - sample_length - 1)
     return wav[random_offset : random_offset + sample_length]
+
+
+def split_images_labels(imgs):
+    # split trainset.imgs in ImageFolder
+    images = []
+    labels = []
+    for item in imgs:
+        images.append(item[0])
+        labels.append(item[1])
+
+    return np.array(images), np.array(labels)

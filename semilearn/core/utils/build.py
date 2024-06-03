@@ -9,6 +9,7 @@ import torch
 import torch.distributed as dist
 from torch.utils.data import DataLoader
 from semilearn.datasets import get_collactor, name2sampler
+from semilearn.datasets.cv_datasets.other import get_other_dset
 from semilearn.nets.utils import param_groups_layer_decay, param_groups_weight_decay
 
 def get_net_builder(net_name, from_name: bool):
@@ -45,7 +46,7 @@ def get_logger(name, save_path=None, level='INFO'):
     create logger function
     """
     logger = logging.getLogger(name)
-    logging.basicConfig(format='[%(asctime)s %(levelname)s] %(message)s', level=getattr(logging, level))
+    logging.basicConfig(format='[%(asctime)s %(levelname)s %(filename)s] => %(message)s', level=getattr(logging, level))
 
     if not save_path is None:
         os.makedirs(save_path, exist_ok=True)
@@ -79,7 +80,7 @@ def get_dataset(args, algorithm, dataset, num_labels, num_classes, data_dir='./d
         lb_dset, ulb_dset, eval_dset = get_medmnist(args, algorithm, dataset, num_labels, num_classes, data_dir=data_dir,  include_lb_to_ulb=include_lb_to_ulb)
         test_dset = None
     elif dataset in ["semi_aves", "semi_inat"]:
-        lb_dset, ulb_dset, eval_dset = get_semi_aves(args, algorithm, dataset, train_split='l_train_val', data_dir=data_dir)
+        lb_dset, ulb_dset, eval_dset = get_semi_aves(args, algorithm, dataset, num_labels, num_classes, train_split='l_train_val', data_dir=data_dir, include_lb_to_ulb=include_lb_to_ulb)
         test_dset = None
     elif dataset == "semi_aves_out":
         lb_dset, ulb_dset, eval_dset = get_semi_aves(args, algorithm, "semi_aves", train_split='l_train_val', ulb_split='u_train_out', data_dir=data_dir)
@@ -101,6 +102,9 @@ def get_dataset(args, algorithm, dataset, num_labels, num_classes, data_dir='./d
         lb_dset, ulb_dset, eval_dset, test_dset = get_pkl_dset(args, algorithm, dataset, num_labels, num_classes, data_dir=data_dir, include_lb_to_ulb=include_lb_to_ulb)
     elif dataset in ['aclImdb', 'ag_news', 'amazon_review', 'dbpedia', 'yahoo_answers', 'yelp_review']:
         lb_dset, ulb_dset, eval_dset, test_dset = get_json_dset(args, algorithm, dataset, num_labels, num_classes, data_dir=data_dir, include_lb_to_ulb=include_lb_to_ulb)
+    elif dataset in ['sun397', 'cub']:
+        lb_dset, ulb_dset, eval_dset = get_other_dset(args, algorithm, dataset, num_labels, num_classes, data_dir=data_dir, include_lb_to_ulb=include_lb_to_ulb)
+        test_dset = None
     else:
         return None
     

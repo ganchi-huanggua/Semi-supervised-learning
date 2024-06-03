@@ -10,7 +10,7 @@ import torch.nn.functional as F
 import torch.utils.checkpoint
 
 from timm.models.layers import DropPath, trunc_normal_
-from timm.models.layers.helpers import to_2tuple
+from timm.layers.helpers import to_2tuple
 
 from semilearn.nets.utils import load_checkpoint
 
@@ -195,8 +195,6 @@ class VisionTransformer(nn.Module):
         self.num_features = self.embed_dim
         self.head = nn.Linear(self.embed_dim, num_classes) if num_classes > 0 else nn.Identity()
 
-
-
     def extract(self, x):
         x = self.patch_embed(x)
         x = torch.cat((self.cls_token.expand(x.shape[0], -1, -1), x), dim=1)
@@ -204,7 +202,6 @@ class VisionTransformer(nn.Module):
         x = self.blocks(x)
         x = self.norm(x)
         return x
-
 
     def forward(self, x, only_fc=False, only_feat=False, **kwargs):
         """

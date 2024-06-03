@@ -18,15 +18,21 @@ from torch.hub import load_state_dict_from_url
 def load_checkpoint(model, checkpoint_path):
     if checkpoint_path and os.path.isfile(checkpoint_path):
         checkpoint = torch.load(checkpoint_path, map_location='cpu')
+        # odict_keys(['cls_token', 'pos_embed', 'patch_embed.proj.weight', 'patch_embed.proj.bias',
+        # 'blocks.0.norm1.weight', 'blocks.0.norm1.bias', 'blocks.0.attn.qkv.weight', 'blocks.0.attn.qkv.bias',
+        # 'blocks.0.attn.proj.weight', 'blocks.0.attn.proj.bias', 'blocks.0.norm2.weight', 'blocks.0.norm2.bias',
+        # 'blocks.0.mlp.fc1.weight', 'blocks.0.mlp.fc1.bias', 'blocks.0.mlp.fc2.weight', 'blocks.0.mlp.fc2.bias', ...,
+        # 'norm.weight', 'norm.bias', 'head.weight', 'head.bias'])
     else:
         checkpoint = load_state_dict_from_url(checkpoint_path, map_location='cpu')
 
-    
-    orig_state_dict = checkpoint['model']
+    try:
+        orig_state_dict = checkpoint['model']
+    except KeyError:
+        orig_state_dict = checkpoint
+
     new_state_dict = {}
     for key, item in orig_state_dict.items():
-
-        
         if key.startswith('module'):
             key = '.'.join(key.split('.')[1:])
         
@@ -47,7 +53,6 @@ def load_checkpoint(model, checkpoint_path):
     match = model.load_state_dict(new_state_dict, strict=False)
     print(match)
     return model
-
 
 
 def resize_pos_embed_vit(posemb, posemb_new, num_tokens=1, gs_new=()):

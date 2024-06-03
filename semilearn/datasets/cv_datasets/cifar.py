@@ -83,9 +83,11 @@ def get_cifar(args, alg, name, num_labels, num_classes, data_dir='./data', inclu
     # args.lb_class_dist = lb_count
     # args.ulb_class_dist = ulb_count
 
-    if alg == 'fullysupervised':
-        lb_data = data
-        lb_targets = targets
+    # fixme: customize
+    # if alg == 'fullysupervised':
+    #     lb_data = data
+    #     lb_targets = targets
+
         # if len(ulb_data) == len(data):
         #     lb_data = ulb_data 
         #     lb_targets = ulb_targets
@@ -110,7 +112,7 @@ def get_cifar(args, alg, name, num_labels, num_classes, data_dir='./data', inclu
 
     lb_dset = BasicDataset(alg, lb_data, lb_targets, num_classes, transform_weak, False, transform_strong, transform_strong, False)
 
-    ulb_dset = BasicDataset(alg, ulb_data, ulb_targets, num_classes, transform_weak, True, transform_medium, transform_strong, False)
+    # ulb_dset = BasicDataset(alg, ulb_data, ulb_targets, num_classes, transform_weak, True, transform_medium, transform_strong, False)
     ulb_dset = BasicDataset(alg, ulb_data, ulb_targets, num_classes, transform_weak, True, transform_medium, transform_strong, False)
 
     dset = getattr(torchvision.datasets, name.upper())

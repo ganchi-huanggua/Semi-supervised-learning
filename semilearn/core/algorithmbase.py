@@ -13,6 +13,7 @@ import torch.nn.functional as F
 from torch.cuda.amp import autocast, GradScaler
 
 from semilearn.core.hooks import Hook, get_priority, CheckpointHook, TimerHook, LoggingHook, DistSamplerSeedHook, ParamUpdateHook, EvaluationHook, EMAHook, WANDBHook, AimHook
+from semilearn.core.hooks.freeze import FreezeHook
 from semilearn.core.utils import get_dataset, get_data_loader, get_optimizer, get_cosine_schedule_with_warmup, Bn_Controller
 from semilearn.core.criterions import CELoss, ConsistencyLoss
 
@@ -98,7 +99,7 @@ class AlgorithmBase:
         # self.init(**kwargs)
 
         # set common hooks during training
-        self._hooks = []  # record underlying hooks 
+        self._hooks = []  # record underlying hooks
         self.hooks_dict = OrderedDict() # actual object to be used to call hooks
         self.set_hooks()
 
@@ -138,7 +139,7 @@ class AlgorithmBase:
         loader_dict['train_lb'] = get_data_loader(self.args,
                                                   self.dataset_dict['train_lb'],
                                                   self.args.batch_size,
-                                                  data_sampler=self.args.train_sampler,
+                                                  data_sampler=self.args.train_sampler,  #
                                                   num_iters=self.num_train_iter,
                                                   num_epochs=self.epochs,
                                                   num_workers=self.args.num_workers,
@@ -204,12 +205,14 @@ class AlgorithmBase:
         """
         # parameter update hook is called inside each train_step
         self.register_hook(ParamUpdateHook(), None, "HIGHEST")
+        self.register_hook(FreezeHook(), None, 'HIGHEST')
         self.register_hook(EMAHook(), None, "HIGH")
         self.register_hook(EvaluationHook(), None, "HIGH")
         self.register_hook(CheckpointHook(), None, "HIGH")
         self.register_hook(DistSamplerSeedHook(), None, "NORMAL")
         self.register_hook(TimerHook(), None, "LOW")
         self.register_hook(LoggingHook(), None, "LOWEST")
+
         if self.args.use_wandb:
             self.register_hook(WANDBHook(), None, "LOWEST")
         if self.args.use_aim:
@@ -308,7 +311,7 @@ class AlgorithmBase:
                 self.out_dict, self.log_dict = self.train_step(**self.process_batch(**data_lb, **data_ulb))
                 self.call_hook("after_train_step")
                 self.it += 1
-            
+            # print(self.it)  # 1024
             self.call_hook("after_train_epoch")
 
         self.call_hook("after_run")
@@ -472,8 +475,6 @@ class AlgorithmBase:
         self.hooks_dict = OrderedDict()
         for hook in self._hooks:
             self.hooks_dict[hook.name] = hook
-        
-
 
     def call_hook(self, fn_name, hook_name=None, *args, **kwargs):
         """Call all hooks.
