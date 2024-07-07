@@ -93,9 +93,9 @@ def get_svhn(args, alg, name, num_labels, num_classes, data_dir='./data', includ
                                                                 lb_imbalance_ratio=args.lb_imb_ratio,
                                                                 ulb_imbalance_ratio=args.ulb_imb_ratio,
                                                                 include_lb_to_ulb=include_lb_to_ulb)
-    if alg == 'fullysupervised':
-        lb_data = data
-        lb_targets = targets
+    # if alg == 'fullysupervised':
+    #     lb_data = data
+    #     lb_targets = targets
                 
     # output the distribution of labeled data for remixmatch
     count = [0 for _ in range(num_classes)]
@@ -121,6 +121,6 @@ def get_svhn(args, alg, name, num_labels, num_classes, data_dir='./data', includ
     dset = getattr(torchvision.datasets, name.upper())
     dset = dset(data_dir, split='test', download=True)
     data, targets = dset.data.transpose([0, 2, 3, 1]), dset.labels
-    eval_dset = BasicDataset(alg, data, targets, num_classes, transform_val, False, None, None, False)
+    eval_dset = BasicDataset(alg, data, targets, num_classes, transform_val, False, None, None, False, is_eval=True)
 
     return lb_dset, ulb_dset, eval_dset

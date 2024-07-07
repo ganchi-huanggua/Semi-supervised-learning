@@ -121,14 +121,14 @@ def get_other_dset(args, alg, dataset, num_labels, num_classes, data_dir='./data
     print("lb count: {}".format(lb_count))
     print("ulb count: {}".format(ulb_count))
 
-    lb_dset = OtherDataset(alg, dataset, transform=transform_weak,
+    lb_dset = OtherDataset(alg, dataset, transform=transform_weak, transform_medium=transform_medium,
                            transform_strong=transform_strong, samples=lb_data, targets=lb_targets,
                            num_classes=num_classes)
     ulb_dset = OtherDataset(alg, dataset, is_ulb=True, transform=transform_weak,
                             transform_medium=transform_medium, transform_strong=transform_strong,
                             samples=ulb_data, targets=ulb_targets, num_classes=num_classes)
     eval_dset = OtherDataset(alg, dataset, transform=transform_val, samples=test_data,
-                             targets=test_targets, num_classes=num_classes)
+                             targets=test_targets, num_classes=num_classes, is_eval=True)
 
     return lb_dset, ulb_dset, eval_dset
 
@@ -136,8 +136,8 @@ def get_other_dset(args, alg, dataset, num_labels, num_classes, data_dir='./data
 class OtherDataset(BasicDataset):
     def __init__(self, alg, dataset, transform=None, transform_medium=None, transform_strong=None,
                  loader=dataset_parser.default_loader, is_ulb=False, samples=None, targets=None, num_classes=None,
-                 *args, **kwargs):
-
+                 is_eval=False, *args, **kwargs):
+        super().__init__(alg, samples, targets=targets, is_eval=is_eval)
         self.alg = alg
         self.is_ulb = is_ulb
         self.loader = loader

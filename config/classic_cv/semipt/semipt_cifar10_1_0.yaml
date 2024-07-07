@@ -13,10 +13,10 @@ num_log_iter: 256
 num_labels: 10
 batch_size: 32
 eval_batch_size: 128
-hard_label: True
+hard_label: True  # fix it, if necessarily
 T: 0.5
-p_cutoff: 0.95
-ulb_loss_ratio: 1.0
+p_cutoff: 0.95  # create a mask to satisfy the usb frame
+ulb_loss_ratio: 99  # 1: 52.11 / 999: 53.93  / 99: 57.97 / 50: 55.58 / 9: 54.17
 uratio: 1  # 7
 ema_m: 0.  # 0.999
 crop_ratio: 0.875
@@ -42,7 +42,7 @@ rank: 0
 multiprocessing_distributed: False
 dist_url: tcp://127.0.0.1:10008
 dist_backend: nccl
-gpu: 3
+gpu: 5
 
 use_pretrain: True
 pretrain_path: /home/lhz/code/semi-pt/vit_base_patch16_224.augreg2_in21k_ft_in1k/pytorch_model.bin

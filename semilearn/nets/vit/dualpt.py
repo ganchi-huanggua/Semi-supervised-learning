@@ -8,8 +8,10 @@ from ..utils import load_checkpoint
 
 
 class DualPrompt(VisionTransformer):
-    def __init__(self, patch_size=16, embed_dim=768, depth=12, num_heads=12, drop_path_rate=0.2, num_classes=10, **kwargs):
-        super().__init__(patch_size=patch_size, embed_dim=embed_dim, depth=depth, num_heads=num_heads, drop_path_rate=drop_path_rate, num_classes=num_classes)
+    def __init__(self, patch_size=16, embed_dim=768, depth=12, num_heads=12, drop_path_rate=0.2, num_classes=10,
+                 **kwargs):
+        super().__init__(patch_size=patch_size, embed_dim=embed_dim, depth=depth, num_heads=num_heads,
+                         drop_path_rate=drop_path_rate, num_classes=num_classes)
         self.prompt_length = kwargs['prompt_length']
         self.insert_layers = kwargs['insert_layers']
 
@@ -19,13 +21,16 @@ class DualPrompt(VisionTransformer):
             nn.init.uniform_(self.simclr_prompt, -1, 1)
             self.ce_prompt = nn.Parameter(torch.randn(prompt_shape), requires_grad=True)
             nn.init.uniform_(self.ce_prompt, -1, 1)
-
         self.projector = nn.Linear(768, 128)
 
-    def extract(self, x: torch.Tensor, is_ce=True):
+    def extract(self, x: torch.Tensor, is_ce=True, no_prompt=False, noise_prompt=False):
         x = self.patch_embed(x)
         x = torch.cat((self.cls_token.expand(x.shape[0], -1, -1), x), dim=1)
         x = self.pos_drop(x + self.pos_embed)
+        if no_prompt:
+            x = self.blocks(x)
+            x = self.norm(x)
+            return x
         if is_ce:
             prompt = self.ce_prompt
         else:
@@ -43,13 +48,13 @@ class DualPrompt(VisionTransformer):
                                    x[:, (1 + self.prompt_length):, :]], dim=1)
                 j += 1
             x = self.blocks[i](x)
-        x = self.norm(x)
         return x
 
-    def forward(self, x, only_fc=False, only_feat=False, is_ce=True, projected=False, **kwargs):
+    def forward(self, x, only_fc=False, only_feat=False, is_ce=True, projected=False, no_prompt=False,
+                noise_prompt=False, **kwargs):
         if only_fc:
             return self.head(x)
-        x = self.extract(x, is_ce=is_ce)
+        x = self.extract(x, is_ce=is_ce, no_prompt=no_prompt, noise_prompt=noise_prompt)
         if self.global_pool:
             x = x[:, 1:].mean(dim=1) if self.global_pool == 'avg' else x[:, 0]
         x = self.fc_norm(x)
@@ -59,7 +64,10 @@ class DualPrompt(VisionTransformer):
                 x = self.projector(x)
             return x
 
-        output = self.head(x)
+        if is_ce:
+            output = self.ce_head(x)
+        else:
+            output = self.simclr_head(x)
         result_dict = {'logits': output, 'feat': x}
         return result_dict
 
@@ -68,19 +76,22 @@ class DualPrompt(VisionTransformer):
             param.requires_grad = False
         self.ce_prompt.requires_grad = True
         self.simclr_prompt.requires_grad = True
-        for param in self.head.parameters():
+        for param in self.ce_head.parameters():
+            param.requires_grad = True
+        for param in self.simclr_head.parameters():
             param.requires_grad = True
         for param in self.projector.parameters():
             param.requires_grad = True
 
 
 def dualpt_on_vit_base_patch_16_224(pretrained=True, pretrained_path='/home/lhz/code/semi-pt/vit_base_patch16_224'
-                                                                  '.augreg2_in21k_ft_in1k/pytorch_model.bin', num_classes=1000):
-
+                                                                     '.augreg2_in21k_ft_in1k/pytorch_model.bin',
+                                    num_classes=1000):
     # insert_layers: 0 means shallow pt, [] means finetune a classifier
     model_kwargs = dict(prompt_length=12, prompt_init='uniform', insert_layers=[0])
-    model = DualPrompt(patch_size=16, embed_dim=768, depth=12, num_heads=12, drop_path_rate=0.2, num_classes=num_classes, **model_kwargs)
+    model = DualPrompt(patch_size=16, embed_dim=768, depth=12, num_heads=12, drop_path_rate=0.2,
+                       num_classes=num_classes, **model_kwargs)
     if pretrained:
         model = load_checkpoint(model, pretrained_path)
-
+    model.freeze()
     return model

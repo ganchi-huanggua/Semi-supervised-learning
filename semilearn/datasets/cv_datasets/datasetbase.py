@@ -30,6 +30,7 @@ class BasicDataset(Dataset):
                  medium_transform=None,
                  strong_transform=None,
                  onehot=False,
+                 is_eval=False,
                  *args, 
                  **kwargs):
         """
@@ -48,6 +49,7 @@ class BasicDataset(Dataset):
         self.targets = targets
 
         self.num_classes = num_classes
+        self.is_eval = is_eval
         self.is_ulb = is_ulb
         self.onehot = onehot
 
@@ -90,7 +92,16 @@ class BasicDataset(Dataset):
                 img = Image.fromarray(img)
             img_w = self.transform(img)
             if not self.is_ulb:
-                return {'idx_lb': idx, 'x_lb': img_w, 'y_lb': target} 
+                if self.is_eval is True:
+                    return {'idx_lb': idx, 'x_lb': img_w, 'y_lb': target}
+                if self.alg == "semipt":
+                    return {'idx_lb': idx, 'x_lb_w': img_w,
+                            'x_lb_s_1': self.strong_transform(img),
+                            'x_lb_s_2': self.strong_transform(img),
+                            'x_lb_m_1': self.medium_transform(img),
+                            'x_lb_m_2': self.medium_transform(img), 'y_lb': target}
+                else:
+                    return {'idx_lb': idx, 'x_lb': img_w, 'y_lb': target}
             else:
                 if self.alg == 'fullysupervised' or self.alg == 'supervised':
                     return {'idx_ulb': idx}
@@ -109,11 +120,12 @@ class BasicDataset(Dataset):
                     img_s1_rot = torchvision.transforms.functional.rotate(img_s1, rotate_v1)
                     img_s2 = self.strong_transform(img)
                     return {'idx_ulb': idx, 'x_ulb_w': img_w, 'x_ulb_s_0': img_s1, 'x_ulb_s_1':img_s2, 'x_ulb_s_0_rot':img_s1_rot, 'rot_v':rotate_v_list.index(rotate_v1)}
-                elif self.alg == 'comatch' or self.alg == 'semipt':
-                    return {'idx_ulb': idx, 'x_ulb_w': img_w, 'x_ulb_s_0': self.strong_transform(img), 'x_ulb_s_1':self.strong_transform(img)}
+                elif self.alg == 'comatch':
+                    return {'idx_ulb': idx, 'x_ulb_w': img_w, 'x_ulb_s_0': self.strong_transform(img), 'x_ulb_s_1': self.strong_transform(img)}
+                elif self.alg == 'semipt':
+                    return {'idx_ulb': idx, 'x_ulb_w': img_w, 'x_ulb_s_0': self.strong_transform(img), 'x_ulb_s_1': self.strong_transform(img), 'y_ulb': target}
                 else:
                     return {'idx_ulb': idx, 'x_ulb_w': img_w, 'x_ulb_s': self.strong_transform(img)} 
-
 
     def __len__(self):
         return len(self.data)

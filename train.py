@@ -226,7 +226,8 @@ def get_config():
     )
 
     # config file
-    parser.add_argument("--c", type=str, default="config/classic_cv/fixmatch/fixmatch_cifar10_vpt_1_0.yaml")
+    parser.add_argument("--c", type=str, default="config/classic_cv/semipt/semipt_test_cifar10_1_0.yaml")
+    # parser.add_argument("--c", type=str, default="config/classic_cv/fixmatch/fixmatch_cifar10_vit_1_0.yaml")
 
     # add algorithm specific parameters
     args = parser.parse_args()

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="lhz@10.26.42.199:11022 key (2)" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="lhz@10.26.42.199:11022 key">
     <serverData>
-      <paths name="lhz@10.26.42.199:11022 key">
+      <paths name="10.26.42.199">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/lhz/code/Semi-Supervised-Learning" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="lhz@10.26.42.199:11022 key (2)">
+      <paths name="lhz@10.26.42.199:11022 key">
         <serverdata>
           <mappings>
             <mapping deploy="/home/lhz/code/Semi-Supervised-Learning" local="$PROJECT_DIR$" />

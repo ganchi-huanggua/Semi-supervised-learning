@@ -96,18 +96,18 @@ def get_semi_aves(args, alg, dataset, num_labels, num_classes, train_split='l_tr
     # args.lb_class_dist = lb_count
     # args.ulb_class_dist = ulb_count
 
-    if alg == 'fullysupervised':
-        lb_data = train_data
-        lb_targets = train_targets
+    # if alg == 'fullysupervised':
+    #     lb_data = train_data
+    #     lb_targets = train_targets
 
     train_labeled_dataset = iNatDataset(alg, data_dir, train_split, dataset, transform=transform_weak,
-                                        transform_strong=transform_strong, samples=lb_data, targets=lb_targets,
-                                        num_classes=num_classes)
+                                        transform_medium=transform_medium, transform_strong=transform_strong,
+                                        samples=lb_data, targets=lb_targets, num_classes=num_classes)
     train_unlabeled_dataset = iNatDataset(alg, data_dir, ulb_split, dataset, is_ulb=True, transform=transform_weak,
                                           transform_medium=transform_medium, transform_strong=transform_strong,
                                           samples=ulb_data, targets=ulb_targets, num_classes=num_classes)
     test_dataset = iNatDataset(alg, data_dir, 'test', dataset, transform=transform_val, samples=test_data,
-                               targets=test_targets, num_classes=num_classes)
+                               targets=test_targets, num_classes=num_classes, is_eval=True)
 
     num_data_per_cls = [0] * train_labeled_dataset.num_classes
     for l in train_labeled_dataset.targets:
@@ -152,10 +152,12 @@ def make_dataset(dataset_root, split, task='All', pl_list=None):
 class iNatDataset(BasicDataset):
     def __init__(self, alg, dataset_root, split, task='All', transform=None, transform_medium=None,
                  transform_strong=None, loader=dataset_parser.default_loader, pl_list=None, is_ulb=False,
-                 samples=None, targets=None, num_classes=None):
+                 samples=None, targets=None, num_classes=None, is_eval=False):
+        super().__init__(alg, samples, targets=targets, is_eval=is_eval, is_ulb=is_ulb, transform=transform,
+                         medium_transform=transform_medium, strong_transform=transform_strong, num_classes=num_classes)
 
-        self.alg = alg
-        self.is_ulb = is_ulb
+        # self.alg = alg
+        # self.is_ulb = is_ulb
         self.loader = loader
         self.dataset_root = dataset_root
         self.task = task
@@ -163,17 +165,17 @@ class iNatDataset(BasicDataset):
         # self.samples, self.num_classes, self.targets = make_dataset(self.dataset_root, split, self.task, pl_list=pl_list)
         self.samples, self.num_classes, self.targets = samples, num_classes, targets
 
-        self.transform = transform
-        self.medium_transform = transform_medium
-        if self.medium_transform is None:
-            if self.is_ulb:
-                assert self.alg not in ['sequencematch'], f"alg {self.alg} requires strong augmentation"
-
-        self.strong_transform = transform_strong
-        if self.strong_transform is None:
-            if self.is_ulb:
-                assert self.alg not in ['fullysupervised', 'supervised', 'pseudolabel', 'vat', 'pimodel', 'meanteacher',
-                                        'mixmatch', 'refixmatch'], f"alg {self.alg} requires strong augmentation"
+        # self.transform = transform
+        # self.medium_transform = transform_medium
+        # if self.medium_transform is None:
+        #     if self.is_ulb:
+        #         assert self.alg not in ['sequencematch'], f"alg {self.alg} requires medium augmentation"
+        #
+        # self.strong_transform = transform_strong
+        # if self.strong_transform is None:
+        #     if self.is_ulb:
+        #         assert self.alg not in ['fullysupervised', 'supervised', 'pseudolabel', 'vat', 'pimodel', 'meanteacher',
+        #                                 'mixmatch', 'refixmatch', 'semipt'], f"alg {self.alg} requires strong augmentation"
 
         self.data = []
         for i in range(len(self.samples)):

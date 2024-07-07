@@ -29,7 +29,10 @@ def consistency_loss(logits, targets, name='ce', mask=None):
         loss = F.mse_loss(probs, targets, reduction='none').mean(dim=1)
     elif name == 'kl':
         loss = F.kl_div(F.log_softmax(logits / 0.5, dim=-1), F.softmax(targets / 0.5, dim=-1), reduction='none')
-        loss = torch.sum(loss * (1.0 - mask).unsqueeze(dim=-1).repeat(1, torch.softmax(logits, dim=-1).shape[1]), dim=1)
+        if mask is not None:
+            loss = torch.sum(loss * (1.0 - mask).unsqueeze(dim=-1).repeat(1, torch.softmax(logits, dim=-1).shape[1]), dim=1)
+        else:
+            loss = torch.sum(loss.unsqueeze(dim=-1).repeat(1, torch.softmax(logits, dim=-1).shape[1]), dim=1)
     else:
         loss = ce_loss(logits, targets, reduction='none')
 
@@ -38,7 +41,6 @@ def consistency_loss(logits, targets, name='ce', mask=None):
         loss = loss * mask
 
     return loss.mean()
-
 
 
 class ConsistencyLoss(nn.Module):

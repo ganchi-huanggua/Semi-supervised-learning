@@ -1,8 +1,8 @@
-algorithm: fixmatch
+algorithm: fullysupervised
 save_dir: ./saved_models/classic_cv
-save_name: fixmatch_cifar10_vit_1_0
-resume: False  # True
-load_path: ./saved_models/classic_cv/fixmatch_cifar10_vit_1_0/latest_model.pth
+save_name: fullysupervised_svhn_vpt_1_0
+resume: True
+load_path: ./saved_models/classic_cv/fullysupervised_svhn_vpt_1_0/latest_model.pth
 overwrite: True
 use_tensorboard: True
 use_wandb: False
@@ -22,17 +22,17 @@ ema_m: 0.  # 0.999
 crop_ratio: 0.875
 img_size: 224  # 32
 optim: SGD
-lr: 0.005  # 0.03
+lr: 0.03
 momentum: 0.9
 weight_decay: 0.0005
 layer_decay: 1.0
 amp: False
 clip: 0.0
 use_cat: False
-net: vit_base_patch16_224
+net: vpt_on_vit_base_patch_16_224
 net_from_name: False
 data_dir: /home/lhz/data
-dataset: cifar10
+dataset: svhn
 train_sampler: RandomSampler
 num_classes: 10
 num_workers: 10
@@ -42,7 +42,7 @@ rank: 0
 multiprocessing_distributed: False
 dist_url: tcp://127.0.0.1:10008
 dist_backend: nccl
-gpu: 5
+gpu: 4
 
 use_pretrain: True
 pretrain_path: /home/lhz/code/semi-pt/vit_base_patch16_224.augreg2_in21k_ft_in1k/pytorch_model.bin

@@ -45,3 +45,4 @@ class LoggingHook(Hook):
                     else:
                         print_text += " "
                 algorithm.print_fn(print_text)
+

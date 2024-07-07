@@ -33,7 +33,7 @@ class ParamUpdateHook(Hook):
             loss.backward()
 
             # fixme
-            if algorithm.it == 1 or algorithm.it == 5124:
+            if algorithm.it == 1 or algorithm.it == 5124 or algorithm.it == 10243:
                 for name, param in algorithm.model.named_parameters():
                     if param.grad is not None:
                         print(f"Layer: {name}, Grad: {param.grad.view(-1)[:10]}")

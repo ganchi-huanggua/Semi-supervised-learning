@@ -118,6 +118,6 @@ def get_cifar(args, alg, name, num_labels, num_classes, data_dir='./data', inclu
     dset = getattr(torchvision.datasets, name.upper())
     dset = dset(data_dir, train=False, download=True)
     test_data, test_targets = dset.data, dset.targets
-    eval_dset = BasicDataset(alg, test_data, test_targets, num_classes, transform_val, False, None, None, False)
+    eval_dset = BasicDataset(alg, test_data, test_targets, num_classes, transform_val, False, None, None, False, is_eval=True)
 
     return lb_dset, ulb_dset, eval_dset

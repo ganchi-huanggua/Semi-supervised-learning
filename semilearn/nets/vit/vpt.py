@@ -55,7 +55,7 @@ def vpt_on_vit_base_patch_16_224(pretrained=True, pretrained_path='/home/lhz/cod
     model = VPT(patch_size=16, embed_dim=768, depth=12, num_heads=12, drop_path_rate=0.2, num_classes=num_classes, **model_kwargs)
     if pretrained:
         model = load_checkpoint(model, pretrained_path)
-
+    model.freeze()
     return model
 
 
@@ -67,5 +67,5 @@ def ftcls_on_vit_base_patch_16_224(pretrained=True, pretrained_path='/home/lhz/c
     model = VPT(patch_size=16, embed_dim=768, depth=12, num_heads=12, drop_path_rate=0.2, num_classes=num_classes, **model_kwargs)
     if pretrained:
         model = load_checkpoint(model, pretrained_path)
-
+    model.freeze()
     return model

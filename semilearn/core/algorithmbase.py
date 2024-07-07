@@ -163,7 +163,7 @@ class AlgorithmBase:
                                               drop_last=False)
         
         if self.dataset_dict['test'] is not None:
-            loader_dict['test'] =  get_data_loader(self.args,
+            loader_dict['test'] = get_data_loader(self.args,
                                                    self.dataset_dict['test'],
                                                    self.args.eval_batch_size,
                                                    # make sure data_sampler is None for evaluation
