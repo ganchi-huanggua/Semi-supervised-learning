@@ -93,28 +93,28 @@ class SemiPT(AlgorithmBase):
                                           use_hard_label=self.use_hard_label,
                                           T=self.T,
                                           softmax=False)
-            # self.samples_count += pseudo_label.shape[0]
-            # self.correct_count += torch.sum(torch.argmax(probs_x_ulb, dim=-1) == y_ulb).item()
-            # self.labeled_count += torch.sum(mask).item()
-            # self.correct_labeled_count += torch.sum(((torch.argmax(probs_x_ulb, dim=-1) == y_ulb) == 1) & (mask == 1)).item()
-            # if (self.it + 1) % 1024 == 0:
-            #     self.print_fn(self.samples_count)
-            #     self.print_fn(self.correct_count)
-            #     self.print_fn(self.labeled_count)
-            #     self.print_fn(self.correct_labeled_count)
+            self.samples_count += pseudo_label.shape[0]
+            self.correct_count += torch.sum(torch.argmax(probs_x_ulb_w, dim=-1) == y_ulb).item()
+            self.labeled_count += torch.sum(mask).item()
+            self.correct_labeled_count += torch.sum(((torch.argmax(probs_x_ulb_w, dim=-1) == y_ulb) == 1) & (mask == 1)).item()
+            if (self.it + 1) % 1024 == 0:
+                self.print_fn(self.samples_count)
+                self.print_fn(self.correct_count)
+                self.print_fn(self.labeled_count)
+                self.print_fn(self.correct_labeled_count)
 
-            # outs_x_lb = self.model(x_lb_w, only_feat=False, projected=False, is_ce=False)
-            # logits_x_lb = outs_x_lb['logits']
-            # feats_x_lb = outs_x_lb['feat']
+            outs_x_lb = self.model(x_lb, only_feat=False, projected=False, is_ce=False)
+            logits_x_lb = outs_x_lb['logits']
+            feats_x_lb = outs_x_lb['feat']
             feat_dict = {}
             unsup_loss = self.consistency_loss(logits_x_ulb_s, pseudo_label, 'ce', mask=mask)
-            # sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean')
+            sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean')
             # simclr_prompt = self.model.simclr_prompt.detach()
             # unsup_loss = self.l2_similarity_loss(self.model.ce_prompt, simclr_prompt)
-            # total_loss = sup_loss + unsup_loss
-            total_loss = unsup_loss
+            total_loss = sup_loss + unsup_loss
+            # total_loss = unsup_loss
             out_dict = self.process_out_dict(loss=total_loss, feat=feat_dict)
-            log_dict = self.process_log_dict(# sup_loss=sup_loss.item(),
+            log_dict = self.process_log_dict(sup_loss=sup_loss.item(),
                                              unsup_loss=unsup_loss.item(),
                                              total_loss=total_loss.item(),
                                              util_ratio=mask.float().mean().item())

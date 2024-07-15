@@ -4,21 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="21de7199-da8e-44bf-ab57-3ca8072153c4" name="更改" comment="semipt v2.0 complete">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+    <list default="true" id="21de7199-da8e-44bf-ab57-3ca8072153c4" name="更改" comment="semipt v2.0 complete and go home">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_cifar10_vpt_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_cifar10_vpt_1_0.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_cifar10_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_cifar10_1_0.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_semi_inat_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_semi_inat_1_0.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_sun397_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_sun397_1_0.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_svhn_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_svhn_1_0.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semilearn/algorithms/fixmatch/fixmatch.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/algorithms/fixmatch/fixmatch.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/semilearn/algorithms/semipt/semipt.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/algorithms/semipt/semipt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semilearn/core/algorithmbase.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/core/algorithmbase.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semilearn/core/hooks/param_update.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/core/hooks/param_update.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/datasetbase.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/datasetbase.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semilearn/nets/vit/dualpt.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/nets/vit/dualpt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/semilearn/nets/vit/vit.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/nets/vit/vit.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +103,8 @@
       <workItem from="1720315467974" duration="271000" />
       <workItem from="1720401644425" duration="26046000" />
       <workItem from="1720782497998" duration="23896000" />
-      <workItem from="1721009184613" duration="1217000" />
+      <workItem from="1721009184613" duration="2024000" />
+      <workItem from="1721016459309" duration="4204000" />
     </task>
     <task id="LOCAL-00001" summary="semipt v2.0 complete">
       <option name="closed" value="true" />
@@ -125,7 +114,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720315650188</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="semipt v2.0 complete and go home">
+      <option name="closed" value="true" />
+      <created>1721013369721</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1721013369721</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,7 +130,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="semipt v2.0 complete" />
-    <option name="LAST_COMMIT_MESSAGE" value="semipt v2.0 complete" />
+    <MESSAGE value="semipt v2.0 complete and go home" />
+    <option name="LAST_COMMIT_MESSAGE" value="semipt v2.0 complete and go home" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Semi_supervised_learning$train.coverage" NAME="train 覆盖结果" MODIFIED="1720863331783" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
