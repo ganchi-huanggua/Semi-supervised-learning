@@ -42,7 +42,7 @@ rank: 0
 multiprocessing_distributed: False
 dist_url: tcp://127.0.0.1:10008
 dist_backend: nccl
-gpu: 5
+gpu: 4
 
 use_pretrain: True
 pretrain_path: /home/lhz/code/semi-pt/vit_base_patch16_224.augreg2_in21k_ft_in1k/pytorch_model.bin

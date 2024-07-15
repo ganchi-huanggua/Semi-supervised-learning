@@ -95,11 +95,7 @@ class BasicDataset(Dataset):
                 if self.is_eval is True:
                     return {'idx_lb': idx, 'x_lb': img_w, 'y_lb': target}
                 if self.alg == "semipt":
-                    return {'idx_lb': idx, 'x_lb_w': img_w,
-                            'x_lb_s_1': self.strong_transform(img),
-                            'x_lb_s_2': self.strong_transform(img),
-                            'x_lb_m_1': self.medium_transform(img),
-                            'x_lb_m_2': self.medium_transform(img), 'y_lb': target}
+                    return {'idx_lb': idx, 'x_lb': img_w, 'y_lb': target}
                 else:
                     return {'idx_lb': idx, 'x_lb': img_w, 'y_lb': target}
             else:

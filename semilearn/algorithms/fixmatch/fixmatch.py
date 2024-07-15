@@ -34,6 +34,7 @@ class FixMatch(AlgorithmBase):
         super().__init__(args, net_builder, tb_log, logger) 
         # fixmatch specified arguments
         self.init(T=args.T, p_cutoff=args.p_cutoff, hard_label=args.hard_label)
+        # self.change_state = 0
     
     def init(self, T, p_cutoff, hard_label=True):
         self.T = T
@@ -46,6 +47,9 @@ class FixMatch(AlgorithmBase):
         super().set_hooks()
 
     def train_step(self, x_lb, y_lb, x_ulb_w, x_ulb_s):
+        # if self.change_state == 0:
+        #     self.optimizer, self.scheduler = self.set_optimizer()
+        #     self.change_state = 1
         num_lb = y_lb.shape[0]
 
         # inference and calculate sup/unsup losses
@@ -58,7 +62,7 @@ class FixMatch(AlgorithmBase):
                 feats_x_lb = outputs['feat'][:num_lb]
                 feats_x_ulb_w, feats_x_ulb_s = outputs['feat'][num_lb:].chunk(2)
             else:
-                outs_x_lb = self.model(x_lb) 
+                outs_x_lb = self.model(x_lb)
                 logits_x_lb = outs_x_lb['logits']
                 feats_x_lb = outs_x_lb['feat']
                 outs_x_ulb_s = self.model(x_ulb_s)
@@ -68,14 +72,15 @@ class FixMatch(AlgorithmBase):
                     outs_x_ulb_w = self.model(x_ulb_w)
                     logits_x_ulb_w = outs_x_ulb_w['logits']
                     feats_x_ulb_w = outs_x_ulb_w['feat']
-            feat_dict = {'x_lb':feats_x_lb, 'x_ulb_w':feats_x_ulb_w, 'x_ulb_s':feats_x_ulb_s}
+            # feat_dict = {'x_lb':feats_x_lb, 'x_ulb_w':feats_x_ulb_w, 'x_ulb_s':feats_x_ulb_s}
+            feat_dict = {}
 
             sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean')
-            
+
             # probs_x_ulb_w = torch.softmax(logits_x_ulb_w, dim=-1)
             probs_x_ulb_w = self.compute_prob(logits_x_ulb_w.detach())
-            
-            # if distribution alignment hook is registered, call it 
+
+            # if distribution alignment hook is registered, call it
             # this is implemented for imbalanced algorithm - CReST
             if self.registered_hook("DistAlignHook"):
                 probs_x_ulb_w = self.call_hook("dist_align", "DistAlignHook", probs_x_ulb=probs_x_ulb_w.detach())
@@ -84,7 +89,7 @@ class FixMatch(AlgorithmBase):
             mask = self.call_hook("masking", "MaskingHook", logits_x_ulb=probs_x_ulb_w, softmax_x_ulb=False)
 
             # generate unlabeled targets using pseudo label hook
-            pseudo_label = self.call_hook("gen_ulb_targets", "PseudoLabelingHook", 
+            pseudo_label = self.call_hook("gen_ulb_targets", "PseudoLabelingHook",
                                           logits=probs_x_ulb_w,
                                           use_hard_label=self.use_hard_label,
                                           T=self.T,
@@ -94,13 +99,14 @@ class FixMatch(AlgorithmBase):
                                                pseudo_label,
                                                'ce',
                                                mask=mask)
-
-            total_loss = sup_loss + self.lambda_u * unsup_loss
-
+            if self.epoch < 5:
+                total_loss = sup_loss + self.lambda_u * unsup_loss
+            else:
+                total_loss = unsup_loss
         out_dict = self.process_out_dict(loss=total_loss, feat=feat_dict)
-        log_dict = self.process_log_dict(sup_loss=sup_loss.item(), 
-                                         unsup_loss=unsup_loss.item(), 
-                                         total_loss=total_loss.item(), 
+        log_dict = self.process_log_dict(#sup_loss=sup_loss.item(),
+                                         unsup_loss=unsup_loss.item(),
+                                         total_loss=total_loss.item(),
                                          util_ratio=mask.float().mean().item())
         return out_dict, log_dict
         

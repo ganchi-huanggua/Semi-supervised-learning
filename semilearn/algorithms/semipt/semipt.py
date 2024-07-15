@@ -37,9 +37,9 @@ class SemiPT(AlgorithmBase):
         self.register_hook(FixedThresholdingHook(), "MaskingHook")
         super().set_hooks()
 
-    def train_step(self, x_lb_w, x_lb_s_1, x_lb_s_2, x_lb_m_1, x_lb_m_2, y_lb, x_ulb_w, x_ulb_s_0, x_ulb_s_1, y_ulb):
+    def train_step(self, x_lb, y_lb, x_ulb_w, x_ulb_s_0, x_ulb_s_1, y_ulb):
         # phase one, only use unlabeled data to calculate unsup loss and update SimCLR prompt
-        if self.epoch < 5:
+        if self.epoch < 10:
             feats_x_ulb_s_0 = self.model(x_ulb_s_0, only_feat=True, projected=True, is_ce=False)
             feats_x_ulb_s_1 = self.model(x_ulb_s_1, only_feat=True, projected=True, is_ce=False)
             unsup_loss = self.NT_xent_loss(feats_x_ulb_s_0, feats_x_ulb_s_1)
@@ -51,14 +51,14 @@ class SemiPT(AlgorithmBase):
                                              total_loss=total_loss.item())
         # phase two, use labeled data to train another prompt, and use the prompts learned in the
         # first stage to constrain the updates of this prompt
-        elif 5 <= self.epoch < 10:
+        elif 10 <= self.epoch < 20:
             if self.change_state != 1:
                 self.model.simclr_prompt.requires_grad = False
                 # reset optimizer and scheduler
                 self.optimizer, self.scheduler = self.set_optimizer()
                 self.change_state = 1
 
-            outs_x_lb = self.model(x_lb_w, only_feat=False, projected=False, is_ce=False)
+            outs_x_lb = self.model(x_lb, only_feat=False, projected=False, is_ce=False)
             logits_x_lb = outs_x_lb['logits']
             feats_x_lb = outs_x_lb['feat']
             sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean')
@@ -71,47 +71,51 @@ class SemiPT(AlgorithmBase):
             if self.change_state != 2:
                 self.load_best_model(os.path.join(self.save_dir, self.save_name, 'model_best.pth'))
                 # self.model.freeze()
-                # self.model.simclr_prompt.requires_grad = True
-                self.model.simclr_head.requires_grad = False
+                self.model.simclr_prompt.requires_grad = True
+                # for param in self.model.simclr_head.parameters():
+                #     param.requires_grad = False
                 self.optimizer, self.scheduler = self.set_optimizer()
                 self.change_state = 2
 
-            outs_x_ulb_w = self.model(x_ulb_w, only_feat=False, projected=False, is_ce=False)
-            logits_x_ulb_w = outs_x_ulb_w['logits']
-            feats_x_ulb_w = outs_x_ulb_w['feat']
-            outs_x_ulb_s = self.model(x_ulb_s_1, only_feat=False, projected=False, is_ce=True)
+            outs_x_ulb_s = self.model(x_ulb_s_0, only_feat=False, projected=False, is_ce=False)
             logits_x_ulb_s = outs_x_ulb_s['logits']
             feats_x_ulb_s = outs_x_ulb_s['feat']
 
-            probs_x_ulb = self.compute_prob(logits_x_ulb_w.detach())
-            mask = self.call_hook("masking", "MaskingHook", logits_x_ulb=probs_x_ulb, softmax_x_ulb=False)
+            with torch.no_grad():
+                outs_x_ulb_w = self.model(x_ulb_w, only_feat=False, projected=False, is_ce=False)
+                logits_x_ulb_w = outs_x_ulb_w['logits']
+                feats_x_ulb_w = outs_x_ulb_w['feat']
+
+            probs_x_ulb_w = self.compute_prob(logits_x_ulb_w.detach())
+            mask = self.call_hook("masking", "MaskingHook", logits_x_ulb=probs_x_ulb_w, softmax_x_ulb=False)
             pseudo_label = self.call_hook("gen_ulb_targets", "PseudoLabelingHook",
-                                          logits=probs_x_ulb,
+                                          logits=probs_x_ulb_w,
                                           use_hard_label=self.use_hard_label,
                                           T=self.T,
                                           softmax=False)
-            self.samples_count += pseudo_label.shape[0]
-            self.correct_count += torch.sum(torch.argmax(probs_x_ulb, dim=-1) == y_ulb).item()
-            self.labeled_count += torch.sum(mask).item()
-            self.correct_labeled_count += torch.sum(((torch.argmax(probs_x_ulb, dim=-1) == y_ulb) == 1) & (mask == 1)).item()
-            if (self.it + 1) % 1024 == 0:
-                self.print_fn(self.samples_count)
-                self.print_fn(self.correct_count)
-                self.print_fn(self.labeled_count)
-                self.print_fn(self.correct_labeled_count)
+            # self.samples_count += pseudo_label.shape[0]
+            # self.correct_count += torch.sum(torch.argmax(probs_x_ulb, dim=-1) == y_ulb).item()
+            # self.labeled_count += torch.sum(mask).item()
+            # self.correct_labeled_count += torch.sum(((torch.argmax(probs_x_ulb, dim=-1) == y_ulb) == 1) & (mask == 1)).item()
+            # if (self.it + 1) % 1024 == 0:
+            #     self.print_fn(self.samples_count)
+            #     self.print_fn(self.correct_count)
+            #     self.print_fn(self.labeled_count)
+            #     self.print_fn(self.correct_labeled_count)
 
-            # outs_x_lb = self.model(x_lb_w, only_feat=False, projected=False, is_ce=True)
+            # outs_x_lb = self.model(x_lb_w, only_feat=False, projected=False, is_ce=False)
             # logits_x_lb = outs_x_lb['logits']
             # feats_x_lb = outs_x_lb['feat']
             feat_dict = {}
-            sup_loss = self.consistency_loss(logits_x_ulb_s, pseudo_label, 'ce', mask=mask)
+            unsup_loss = self.consistency_loss(logits_x_ulb_s, pseudo_label, 'ce', mask=mask)
             # sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean')
             # simclr_prompt = self.model.simclr_prompt.detach()
             # unsup_loss = self.l2_similarity_loss(self.model.ce_prompt, simclr_prompt)
-            total_loss = sup_loss
+            # total_loss = sup_loss + unsup_loss
+            total_loss = unsup_loss
             out_dict = self.process_out_dict(loss=total_loss, feat=feat_dict)
-            log_dict = self.process_log_dict(sup_loss=sup_loss.item(),
-                                             # unsup_loss=unsup_loss.item(),
+            log_dict = self.process_log_dict(# sup_loss=sup_loss.item(),
+                                             unsup_loss=unsup_loss.item(),
                                              total_loss=total_loss.item(),
                                              util_ratio=mask.float().mean().item())
         return out_dict, log_dict
@@ -153,7 +157,7 @@ class SemiPT(AlgorithmBase):
                     if self.change_state == 1:
                         logits = self.model(x, is_ce=False)[out_key]
                     else:
-                        logits = self.model(x)[out_key]
+                        logits = self.model(x, is_ce=False)[out_key]
                     loss = F.cross_entropy(logits, y, reduction='mean', ignore_index=-1)
                     y_true.extend(y.cpu().tolist())
                     y_pred.extend(torch.max(logits, dim=-1)[1].cpu().tolist())
@@ -187,9 +191,13 @@ class SemiPT(AlgorithmBase):
         checkpoint = torch.load(load_path, map_location='cpu')
         match = self.model.load_state_dict(checkpoint['model'], strict=False)
         self.ema_model.load_state_dict(checkpoint['ema_model'], strict=False)
-        self.it = 10240
-        self.start_epoch = 10
-        self.epoch = 10
+        self.loss_scaler.load_state_dict(checkpoint['loss_scaler'])
+        # self.optimizer.load_state_dict(checkpoint['optimizer'])
+        # if self.scheduler is not None and 'scheduler' in checkpoint:
+        #     self.scheduler.load_state_dict(checkpoint['scheduler'])
+        self.it = 20480
+        self.start_epoch = 20
+        self.epoch = 20
         self.print_fn('Model loaded')
         self.print_fn(match)
         return checkpoint
@@ -206,7 +214,7 @@ class SemiPT(AlgorithmBase):
         self.epoch = self.start_epoch
         self.best_it = checkpoint['best_it']
         self.best_eval_acc = checkpoint['best_eval_acc']
-        if self.it != 5120 and self.it != 10240:
+        if self.it != 20480 and self.it != 10240:
             self.loss_scaler.load_state_dict(checkpoint['loss_scaler'])
             self.optimizer.load_state_dict(checkpoint['optimizer'])
             if self.scheduler is not None and 'scheduler' in checkpoint:

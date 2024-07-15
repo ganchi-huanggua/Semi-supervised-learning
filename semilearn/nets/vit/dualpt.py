@@ -22,8 +22,12 @@ class DualPrompt(VisionTransformer):
             self.ce_prompt = nn.Parameter(torch.randn(prompt_shape), requires_grad=True)
             nn.init.uniform_(self.ce_prompt, -1, 1)
         self.projector = nn.Linear(768, 128)
+        self.simclr_head = nn.Linear(self.embed_dim, num_classes) if num_classes > 0 else nn.Identity()
+        self.ce_head = nn.Linear(self.embed_dim, num_classes) if num_classes > 0 else nn.Identity()
+        self.noise_prompt = None
 
-    def extract(self, x: torch.Tensor, is_ce=True, no_prompt=False, noise_prompt=False):
+    def extract(self, x: torch.Tensor, is_ce=True, no_prompt=False, noise=False):
+
         x = self.patch_embed(x)
         x = torch.cat((self.cls_token.expand(x.shape[0], -1, -1), x), dim=1)
         x = self.pos_drop(x + self.pos_embed)
@@ -35,26 +39,46 @@ class DualPrompt(VisionTransformer):
             prompt = self.ce_prompt
         else:
             prompt = self.simclr_prompt
+        x = torch.cat([x[:, 0, :].unsqueeze(1),
+                       prompt[0, ...].squeeze(0).expand(x.shape[0], -1, -1),
+                       x[:, 1:, :]], dim=1)
+        # if noise:
+        #     if self.noise_prompt is None:
+        #         # noise_prompt = nn.Parameter(torch.randn(1, 12, 768), requires_grad=False).to(x.device)
+        #         # nn.init.uniform_(noise_prompt, -1, 1)
+        #         noise_prompt = nn.Parameter(torch.zeros(1, 12, 768), requires_grad=False).to(x.device)
+        #         self.noise_prompt = noise_prompt.detach()
+        #     # x = torch.cat([x[:, 0, :].unsqueeze(1),
+        #     #                self.noise_prompt[0, ...].squeeze(0).expand(x.shape[0], -1, -1),
+        #     #                x[:, 1:, :]], dim=1)
+
         for i, block in enumerate(self.blocks):
-            j = 0
-            if i in self.insert_layers:
-                if i == self.insert_layers[0]:
-                    x = torch.cat([x[:, 0, :].unsqueeze(1),
-                                   prompt[j, ...].squeeze(0).expand(x.shape[0], -1, -1),
-                                   x[:, 1:, :]], dim=1)
-                else:
-                    x = torch.cat([x[:, 0, :].unsqueeze(1),
-                                   prompt[j, ...].squeeze(0).expand(x.shape[0], -1, -1),
-                                   x[:, (1 + self.prompt_length):, :]], dim=1)
-                j += 1
+            # if i == 7 and noise:
+            #     x = torch.cat([x[:, 0, :].unsqueeze(1),
+            #                    self.noise_prompt[0, ...].squeeze(0).expand(x.shape[0], -1, -1),
+            #                    x[:, 1:, :]], dim=1)
             x = self.blocks[i](x)
+        # for i, block in enumerate(self.blocks):
+        #     j = 0
+        #     if i in self.insert_layers:
+        #         if i == self.insert_layers[0]:
+        #             x = torch.cat([x[:, 0, :].unsqueeze(1),
+        #                            prompt[j, ...].squeeze(0).expand(x.shape[0], -1, -1),
+        #                            x[:, 1:, :]], dim=1)
+        #         else:
+        #             x = torch.cat([x[:, 0, :].unsqueeze(1),
+        #                            prompt[j, ...].squeeze(0).expand(x.shape[0], -1, -1),
+        #                            x[:, (1 + self.prompt_length):, :]], dim=1)
+        #         j += 1
+        #     x = self.blocks[i](x)
+
         return x
 
     def forward(self, x, only_fc=False, only_feat=False, is_ce=True, projected=False, no_prompt=False,
-                noise_prompt=False, **kwargs):
+                noise=False, **kwargs):
         if only_fc:
             return self.head(x)
-        x = self.extract(x, is_ce=is_ce, no_prompt=no_prompt, noise_prompt=noise_prompt)
+        x = self.extract(x, is_ce=is_ce, no_prompt=no_prompt, noise=noise)
         if self.global_pool:
             x = x[:, 1:].mean(dim=1) if self.global_pool == 'avg' else x[:, 0]
         x = self.fc_norm(x)

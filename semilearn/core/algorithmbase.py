@@ -205,7 +205,7 @@ class AlgorithmBase:
         """
         # parameter update hook is called inside each train_step
         self.register_hook(ParamUpdateHook(), None, "HIGHEST")
-        self.register_hook(FreezeHook(), None, 'HIGHEST')
+        # self.register_hook(FreezeHook(), None, 'HIGHEST')
         self.register_hook(EMAHook(), None, "HIGH")
         self.register_hook(EvaluationHook(), None, "HIGH")
         self.register_hook(CheckpointHook(), None, "HIGH")

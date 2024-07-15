@@ -193,8 +193,7 @@ class VisionTransformer(nn.Module):
         # Classifier Head
         self.fc_norm = norm_layer(embed_dim) if use_fc_norm else nn.Identity()
         self.num_features = self.embed_dim
-        self.simclr_head = nn.Linear(self.embed_dim, num_classes) if num_classes > 0 else nn.Identity()
-        self.ce_head = nn.Linear(self.embed_dim, num_classes) if num_classes > 0 else nn.Identity()
+        self.head = nn.Linear(self.embed_dim, num_classes) if num_classes > 0 else nn.Identity()
 
     def extract(self, x):
         x = self.patch_embed(x)

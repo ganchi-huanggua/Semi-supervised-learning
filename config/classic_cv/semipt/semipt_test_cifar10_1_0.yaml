@@ -6,16 +6,16 @@ load_path: ./saved_models/classic_cv/semipt_cifar10_1_0/latest_model.pth
 overwrite: True
 use_tensorboard: True
 use_wandb: False
-epoch: 15
-num_train_iter: 15360
+epoch: 30
+num_train_iter: 30720
 num_eval_iter: 1024
 num_log_iter: 256
 num_labels: 10
 batch_size: 32
 eval_batch_size: 128
-hard_label: False
+hard_label: True
 T: 0.5
-p_cutoff: 0.8  # create a mask to satisfy the usb frame
+p_cutoff: 0.95  # create a mask to satisfy the usb frame
 ulb_loss_ratio: 99  # 1: 52.11 / 999: 53.93  / 99: 57.97 / 50: 55.58 / 9: 54.17
 uratio: 1  # 7
 ema_m: 0.  # 0.999
