@@ -1202,7 +1202,7 @@
           <mxGeometry x="1240" y="1198" width="160" height="50" as="geometry" />
         </mxCell>
         <mxCell id="A_rPZh0HIhqkLauxufU5-1" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Predicted logits&lt;/b&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="1240" y="828" width="160" height="50" as="geometry" />
+          <mxGeometry x="1240" y="838" width="160" height="50" as="geometry" />
         </mxCell>
         <mxCell id="A_rPZh0HIhqkLauxufU5-2" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Ground truth&lt;/b&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="1460" y="910" width="160" height="50" as="geometry" />
