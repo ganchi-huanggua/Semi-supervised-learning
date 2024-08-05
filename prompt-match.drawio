@@ -322,7 +322,7 @@
             <Array as="points" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="-JA800IVU4irEzKhAgy7-155" value="" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffcc99;strokeColor=#36393d;" vertex="1" parent="1">
+        <mxCell id="-JA800IVU4irEzKhAgy7-155" value="" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffcccc;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="1190" y="200" width="50" height="50" as="geometry" />
         </mxCell>
         <mxCell id="-JA800IVU4irEzKhAgy7-156" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
@@ -337,7 +337,7 @@
         <mxCell id="-JA800IVU4irEzKhAgy7-162" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
           <mxGeometry x="1190" y="250" width="50" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="-JA800IVU4irEzKhAgy7-163" value="" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffcc99;strokeColor=#36393d;" vertex="1" parent="1">
+        <mxCell id="-JA800IVU4irEzKhAgy7-163" value="" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffcccc;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="1240" y="250" width="50" height="50" as="geometry" />
         </mxCell>
         <mxCell id="-JA800IVU4irEzKhAgy7-164" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
@@ -352,7 +352,7 @@
         <mxCell id="-JA800IVU4irEzKhAgy7-167" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
           <mxGeometry x="1240" y="300" width="50" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="-JA800IVU4irEzKhAgy7-168" value="" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffcc99;strokeColor=#36393d;" vertex="1" parent="1">
+        <mxCell id="-JA800IVU4irEzKhAgy7-168" value="" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffcccc;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="1290" y="300" width="50" height="50" as="geometry" />
         </mxCell>
         <mxCell id="-JA800IVU4irEzKhAgy7-169" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
@@ -367,8 +367,14 @@
         <mxCell id="-JA800IVU4irEzKhAgy7-172" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
           <mxGeometry x="1290" y="350" width="50" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="-JA800IVU4irEzKhAgy7-173" value="" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffcc99;strokeColor=#36393d;" vertex="1" parent="1">
+        <mxCell id="-JA800IVU4irEzKhAgy7-173" value="" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffcccc;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="1340" y="350" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="-JA800IVU4irEzKhAgy7-175" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;pair-wise similarity&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="404" width="119" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="-JA800IVU4irEzKhAgy7-176" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Lu = Simclr Loss&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1209.5" y="150" width="160" height="50" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
