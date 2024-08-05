@@ -1133,7 +1133,10 @@
           <mxGeometry x="1327.25" y="1704" width="65.5" height="50" as="geometry" />
         </mxCell>
         <mxCell id="1snBXK3KlbBlx8bwhbPS-12" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Predict and set threshold&lt;/b&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="1261.75" y="1754" width="131" height="50" as="geometry" />
+          <mxGeometry x="1264.5" y="1750" width="131" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="1snBXK3KlbBlx8bwhbPS-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="1snBXK3KlbBlx8bwhbPS-12" target="1snBXK3KlbBlx8bwhbPS-12">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
