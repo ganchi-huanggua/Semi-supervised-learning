@@ -773,10 +773,10 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="5L4TA6ioMpqjEyqDMT-2-20" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Ls = CE Loss (augmented)&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="1401" y="878" width="160" height="50" as="geometry" />
+          <mxGeometry x="1430" y="868" width="160" height="50" as="geometry" />
         </mxCell>
         <mxCell id="5L4TA6ioMpqjEyqDMT-2-21" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Ls = CE Loss&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="1401" y="1110" width="160" height="50" as="geometry" />
+          <mxGeometry x="1419.5" y="1115" width="160" height="50" as="geometry" />
         </mxCell>
         <mxCell id="5L4TA6ioMpqjEyqDMT-2-24" value="" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#ffff88;strokeColor=#36393d;" vertex="1" parent="1">
           <mxGeometry x="969" y="1608" width="108" height="130" as="geometry" />
@@ -1191,6 +1191,12 @@
         </mxCell>
         <mxCell id="1snBXK3KlbBlx8bwhbPS-51" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;&lt;b&gt;Dog&lt;/b&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="1537.25" y="1065" width="65.5" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="1snBXK3KlbBlx8bwhbPS-53" value="" style="shape=doubleArrow;whiteSpace=wrap;html=1;arrowWidth=0.5480783902681791;arrowSize=0.3036705922272246;rotation=30;" vertex="1" parent="1">
+          <mxGeometry x="1406" y="908" width="59" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="1snBXK3KlbBlx8bwhbPS-56" value="" style="shape=doubleArrow;whiteSpace=wrap;html=1;arrowWidth=0.5480783902681791;arrowSize=0.3036705922272246;rotation=60;flipV=0;flipH=0;direction=south;" vertex="1" parent="1">
+          <mxGeometry x="1419.5" y="1075.5" width="32" height="59" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
