@@ -107,7 +107,7 @@ def get_semi_aves(args, alg, dataset, num_labels, num_classes, train_split='l_tr
                                           transform_medium=transform_medium, transform_strong=transform_strong,
                                           samples=ulb_data, targets=ulb_targets, num_classes=num_classes)
     test_dataset = iNatDataset(alg, data_dir, 'test', dataset, transform=transform_val, samples=test_data,
-                               targets=test_targets, num_classes=num_classes, is_eval=True)
+                               targets=test_targets, num_classes=num_classes)
 
     num_data_per_cls = [0] * train_labeled_dataset.num_classes
     for l in train_labeled_dataset.targets:
@@ -152,8 +152,8 @@ def make_dataset(dataset_root, split, task='All', pl_list=None):
 class iNatDataset(BasicDataset):
     def __init__(self, alg, dataset_root, split, task='All', transform=None, transform_medium=None,
                  transform_strong=None, loader=dataset_parser.default_loader, pl_list=None, is_ulb=False,
-                 samples=None, targets=None, num_classes=None, is_eval=False):
-        super().__init__(alg, samples, targets=targets, is_eval=is_eval, is_ulb=is_ulb, transform=transform,
+                 samples=None, targets=None, num_classes=None):
+        super().__init__(alg, samples, targets=targets, is_ulb=is_ulb, transform=transform,
                          medium_transform=transform_medium, strong_transform=transform_strong, num_classes=num_classes)
 
         # self.alg = alg

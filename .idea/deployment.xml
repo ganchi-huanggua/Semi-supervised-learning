@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="lhz@10.26.42.199:11022 key">
+  <component name="PublishConfigData" autoUpload="Always" serverName="lhz@10.26.42.199:11022 key" confirmBeforeDeletion="false">
+    <option name="confirmBeforeDeletion" value="false" />
     <serverData>
       <paths name="10.26.42.199">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/lhz/code/Semi-Supervised-Learning" local="$PROJECT_DIR$" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

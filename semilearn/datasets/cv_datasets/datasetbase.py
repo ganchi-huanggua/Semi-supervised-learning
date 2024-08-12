@@ -30,7 +30,6 @@ class BasicDataset(Dataset):
                  medium_transform=None,
                  strong_transform=None,
                  onehot=False,
-                 is_eval=False,
                  *args, 
                  **kwargs):
         """
@@ -49,7 +48,6 @@ class BasicDataset(Dataset):
         self.targets = targets
 
         self.num_classes = num_classes
-        self.is_eval = is_eval
         self.is_ulb = is_ulb
         self.onehot = onehot
 
@@ -92,8 +90,6 @@ class BasicDataset(Dataset):
                 img = Image.fromarray(img)
             img_w = self.transform(img)
             if not self.is_ulb:
-                if self.is_eval is True:
-                    return {'idx_lb': idx, 'x_lb': img_w, 'y_lb': target}
                 if self.alg == "semipt":
                     return {'idx_lb': idx, 'x_lb': img_w, 'y_lb': target}
                 else:

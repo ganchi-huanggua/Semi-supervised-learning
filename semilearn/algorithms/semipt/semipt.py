@@ -40,8 +40,8 @@ class SemiPT(AlgorithmBase):
     def train_step(self, x_lb, y_lb, x_ulb_w, x_ulb_s_0, x_ulb_s_1, y_ulb):
         # phase one, only use unlabeled data to calculate unsup loss and update SimCLR prompt
         if self.epoch < 10:
-            feats_x_ulb_s_0 = self.model(x_ulb_s_0, only_feat=True, projected=True, is_ce=False)
-            feats_x_ulb_s_1 = self.model(x_ulb_s_1, only_feat=True, projected=True, is_ce=False)
+            feats_x_ulb_s_0 = self.model(x_ulb_s_0, only_feat=True, projected=True, simclr=True, ce=False)
+            feats_x_ulb_s_1 = self.model(x_ulb_s_1, only_feat=True, projected=True, simclr=True, ce=False)
             unsup_loss = self.NT_xent_loss(feats_x_ulb_s_0, feats_x_ulb_s_1)
 
             feat_dict = {'x_ulb_s_0': feats_x_ulb_s_0, 'x_ulb_s_1': feats_x_ulb_s_1}
@@ -51,38 +51,19 @@ class SemiPT(AlgorithmBase):
                                              total_loss=total_loss.item())
         # phase two, use labeled data to train another prompt, and use the prompts learned in the
         # first stage to constrain the updates of this prompt
-        elif 10 <= self.epoch < 20:
+        elif 10 <= self.epoch < 60:
             if self.change_state != 1:
                 self.model.simclr_prompt.requires_grad = False
                 # reset optimizer and scheduler
                 self.optimizer, self.scheduler = self.set_optimizer()
                 self.change_state = 1
-
-            outs_x_lb = self.model(x_lb, only_feat=False, projected=False, is_ce=False)
-            logits_x_lb = outs_x_lb['logits']
-            feats_x_lb = outs_x_lb['feat']
-            sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean')
-            total_loss = sup_loss
-            feat_dict = {'x_lb_w': feats_x_lb}
-            out_dict = self.process_out_dict(loss=total_loss, feat=feat_dict)
-            log_dict = self.process_log_dict(sup_loss=sup_loss.item(),
-                                             total_loss=total_loss.item())
-        else:
-            if self.change_state != 2:
-                self.load_best_model(os.path.join(self.save_dir, self.save_name, 'model_best.pth'))
-                # self.model.freeze()
-                self.model.simclr_prompt.requires_grad = True
-                # for param in self.model.simclr_head.parameters():
-                #     param.requires_grad = False
-                self.optimizer, self.scheduler = self.set_optimizer()
-                self.change_state = 2
-
-            outs_x_ulb_s = self.model(x_ulb_s_0, only_feat=False, projected=False, is_ce=False)
+            # upperbound: 64.24
+            outs_x_ulb_s = self.model(x_ulb_s_0, only_feat=False, projected=False, ce=True, simclr=False)
             logits_x_ulb_s = outs_x_ulb_s['logits']
             feats_x_ulb_s = outs_x_ulb_s['feat']
 
             with torch.no_grad():
-                outs_x_ulb_w = self.model(x_ulb_w, only_feat=False, projected=False, is_ce=False)
+                outs_x_ulb_w = self.model(x_ulb_w, only_feat=False, projected=False, ce=True, simclr=True)
                 logits_x_ulb_w = outs_x_ulb_w['logits']
                 feats_x_ulb_w = outs_x_ulb_w['feat']
 
@@ -96,19 +77,23 @@ class SemiPT(AlgorithmBase):
             self.samples_count += pseudo_label.shape[0]
             self.correct_count += torch.sum(torch.argmax(probs_x_ulb_w, dim=-1) == y_ulb).item()
             self.labeled_count += torch.sum(mask).item()
-            self.correct_labeled_count += torch.sum(((torch.argmax(probs_x_ulb_w, dim=-1) == y_ulb) == 1) & (mask == 1)).item()
+            self.correct_labeled_count += torch.sum(
+                ((torch.argmax(probs_x_ulb_w, dim=-1) == y_ulb) == 1) & (mask == 1)).item()
             if (self.it + 1) % 1024 == 0:
                 self.print_fn(self.samples_count)
                 self.print_fn(self.correct_count)
                 self.print_fn(self.labeled_count)
                 self.print_fn(self.correct_labeled_count)
 
-            outs_x_lb = self.model(x_lb, only_feat=False, projected=False, is_ce=False)
+            outs_x_lb = self.model(x_lb, only_feat=False, projected=False, ce=True, simclr=True)
             logits_x_lb = outs_x_lb['logits']
             feats_x_lb = outs_x_lb['feat']
+            outs_x_lb_1 = self.model(x_lb, only_feat=False, projected=False, ce=True, simclr=False)
+            logits_x_lb_1 = outs_x_lb_1['logits']
+            feats_x_lb_1 = outs_x_lb_1['feat']
             feat_dict = {}
             unsup_loss = self.consistency_loss(logits_x_ulb_s, pseudo_label, 'ce', mask=mask)
-            sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean')
+            sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean') + self.ce_loss(logits_x_lb_1, y_lb, reduction='mean')
             # simclr_prompt = self.model.simclr_prompt.detach()
             # unsup_loss = self.l2_similarity_loss(self.model.ce_prompt, simclr_prompt)
             total_loss = sup_loss + unsup_loss
@@ -118,6 +103,9 @@ class SemiPT(AlgorithmBase):
                                              unsup_loss=unsup_loss.item(),
                                              total_loss=total_loss.item(),
                                              util_ratio=mask.float().mean().item())
+        else:
+            out_dict = dict()
+            log_dict = dict()
         return out_dict, log_dict
 
     def evaluate(self, eval_dest='eval', out_key='logits', return_logits=False):
@@ -155,7 +143,7 @@ class SemiPT(AlgorithmBase):
                     num_batch = y.shape[0]
                     total_num += num_batch
                     if self.change_state == 1:
-                        logits = self.model(x, is_ce=False)[out_key]
+                        logits = self.model(x, simclr=True, ce=True)[out_key]
                     else:
                         logits = self.model(x, is_ce=False)[out_key]
                     loss = F.cross_entropy(logits, y, reduction='mean', ignore_index=-1)
@@ -187,41 +175,37 @@ class SemiPT(AlgorithmBase):
                 eval_dict[eval_dest + '/logits'] = y_logits
         return eval_dict
 
-    def load_best_model(self, load_path):
-        checkpoint = torch.load(load_path, map_location='cpu')
-        match = self.model.load_state_dict(checkpoint['model'], strict=False)
-        self.ema_model.load_state_dict(checkpoint['ema_model'], strict=False)
-        self.loss_scaler.load_state_dict(checkpoint['loss_scaler'])
-        # self.optimizer.load_state_dict(checkpoint['optimizer'])
-        # if self.scheduler is not None and 'scheduler' in checkpoint:
-        #     self.scheduler.load_state_dict(checkpoint['scheduler'])
-        self.it = 20480
-        self.start_epoch = 20
-        self.epoch = 20
-        self.print_fn('Model loaded')
-        self.print_fn(match)
-        return checkpoint
-
     def load_model(self, load_path):
         """
         load model and specified parameters for resume
         """
         checkpoint = torch.load(load_path, map_location='cpu')
-        match = self.model.load_state_dict(checkpoint['model'], strict=False)
-        self.ema_model.load_state_dict(checkpoint['ema_model'])
         self.it = checkpoint['it']
         self.start_epoch = checkpoint['epoch']
         self.epoch = self.start_epoch
         self.best_it = checkpoint['best_it']
         self.best_eval_acc = checkpoint['best_eval_acc']
-        if self.it != 20480 and self.it != 10240:
+        if self.it != 10240:
+            if self.epoch > 10:
+                self.model.simclr_prompt.requires_grad = False
+                self.optimizer, self.scheduler = self.set_optimizer()
+                self.change_state = 1
+            match = self.model.load_state_dict(checkpoint['model'])
+            self.ema_model.load_state_dict(checkpoint['ema_model'])
             self.loss_scaler.load_state_dict(checkpoint['loss_scaler'])
             self.optimizer.load_state_dict(checkpoint['optimizer'])
             if self.scheduler is not None and 'scheduler' in checkpoint:
                 self.scheduler.load_state_dict(checkpoint['scheduler'])
+
+        else:
+            pretrained_dict = {k: v for k, v in checkpoint['model'].items() if 'simclr_prompt' in k}
+            match = self.model.load_state_dict(pretrained_dict, strict=False)
+            self.loss_scaler.load_state_dict(checkpoint['loss_scaler'])
+
         self.print_fn('Model loaded')
         self.print_fn(match)
         return checkpoint
+
 
     @staticmethod
     def get_argument():

@@ -6,7 +6,7 @@ import numpy as np
 import math
 import torchvision
 from torchvision import datasets
-from torchvision.datasets import folder as dataset_parser
+from torchvision.datasets import folder as dataset_parser, StanfordCars
 from torchvision.transforms import transforms
 from semilearn.datasets.augmentation import RandAugment, RandomResizedCropAndInterpolation, str_to_interp_mode
 from .datasetbase import BasicDataset
@@ -103,6 +103,17 @@ def get_other_dset(args, alg, dataset, num_labels, num_classes, data_dir='./data
         train_data, train_targets = np.concatenate(train_data, axis=0), np.concatenate(train_targets, axis=0)
         test_data, test_targets = np.concatenate(test_data, axis=0), np.concatenate(test_targets, axis=0)
 
+    elif dataset == "stanfordcars":
+        dataset_dir = "/home/lhz/data"
+        train_dset = StanfordCars(dataset_dir, split='train', download=False)
+        test_dset = StanfordCars(dataset_dir, split='test', download=False)
+
+        train_data = [t[0] for t in train_dset._samples]
+        train_targets = [t[1] for t in train_dset._samples]
+
+        test_data = [t[0] for t in test_dset._samples]
+        test_targets = [t[1] for t in test_dset._samples]
+
     else:
         raise ValueError("Unknown dataset: {}".format(dataset))
 
@@ -128,7 +139,7 @@ def get_other_dset(args, alg, dataset, num_labels, num_classes, data_dir='./data
                             transform_medium=transform_medium, transform_strong=transform_strong,
                             samples=ulb_data, targets=ulb_targets, num_classes=num_classes)
     eval_dset = OtherDataset(alg, dataset, transform=transform_val, samples=test_data,
-                             targets=test_targets, num_classes=num_classes, is_eval=True)
+                             targets=test_targets, num_classes=num_classes)
 
     return lb_dset, ulb_dset, eval_dset
 
@@ -136,8 +147,8 @@ def get_other_dset(args, alg, dataset, num_labels, num_classes, data_dir='./data
 class OtherDataset(BasicDataset):
     def __init__(self, alg, dataset, transform=None, transform_medium=None, transform_strong=None,
                  loader=dataset_parser.default_loader, is_ulb=False, samples=None, targets=None, num_classes=None,
-                 is_eval=False, *args, **kwargs):
-        super().__init__(alg, samples, targets=targets, is_eval=is_eval)
+                 *args, **kwargs):
+        super().__init__(alg, samples, targets=targets)
         self.alg = alg
         self.is_ulb = is_ulb
         self.loader = loader
@@ -162,7 +173,7 @@ class OtherDataset(BasicDataset):
 
     def __sample__(self, idx):
         # path, target = self.samples[idx]
-        if self.dataset in ["sun397", "cub"]:
+        if self.dataset in ["sun397", "cub", "stanfordcars"]:
             img = self.loader(self.samples[idx])
         else:
             img = self.samples[idx]

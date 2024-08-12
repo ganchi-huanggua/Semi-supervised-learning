@@ -121,6 +121,6 @@ def get_svhn(args, alg, name, num_labels, num_classes, data_dir='./data', includ
     dset = getattr(torchvision.datasets, name.upper())
     dset = dset(data_dir, split='test', download=True)
     data, targets = dset.data.transpose([0, 2, 3, 1]), dset.labels
-    eval_dset = BasicDataset(alg, data, targets, num_classes, transform_val, False, None, None, False, is_eval=True)
+    eval_dset = BasicDataset(alg, data, targets, num_classes, transform_val, False, None, None, False)
 
     return lb_dset, ulb_dset, eval_dset

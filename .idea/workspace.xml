@@ -4,14 +4,47 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="21de7199-da8e-44bf-ab57-3ca8072153c4" name="更改" comment="semipt v2.0 complete and go home">
+    <list default="true" id="21de7199-da8e-44bf-ab57-3ca8072153c4" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_cifar10_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_cifar10_1_0.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_cub_vpt_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_cub_vpt_1_0.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_semi_inat_vpt_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_semi_inat_vpt_1_0.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_sun397_vpt_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_sun397_vpt_1_0.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_svhn_vpt_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/fixmatch/fixmatch_svhn_vpt_1_0.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/mixmatch/mixmatch_cifar10_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/mixmatch/mixmatch_cifar10_1_0.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/mixmatch/mixmatch_svhn_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/mixmatch/mixmatch_svhn_1_0.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_cifar10_1_0.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_cifar10_1_0.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_cub_1_0.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_semi_inat_1_0.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_sun397_1_0.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/classic_cv/semipt/semipt_test_svhn_1_0.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/algorithms/fixmatch/fixmatch.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/algorithms/fixmatch/fixmatch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/algorithms/freematch/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/algorithms/freematch/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/algorithms/semipt/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/algorithms/semipt/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/semilearn/algorithms/semipt/semipt.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/algorithms/semipt/semipt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/algorithms/semipt/semipt_v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/algorithms/semipt/semipt_v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/core/utils/build.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/core/utils/build.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/aves.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/aves.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/cifar.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/cifar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/datasetbase.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/datasetbase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/other.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/other.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/svhn.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/datasets/cv_datasets/svhn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/nets/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/nets/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/semilearn/nets/vit/dualpt.py" beforeDir="false" afterPath="$PROJECT_DIR$/semilearn/nets/vit/dualpt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -36,13 +69,13 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/code/Semi-supervised-learning/semilearn/nets/vit&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/code/Semi-supervised-learning/config/classic_cv/fullysupervised&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.idesettings.debugger.python&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -51,12 +84,36 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\code\Semi-supervised-learning\semilearn\nets\vit" />
+      <recent name="E:\code\Semi-supervised-learning\config\classic_cv\fullysupervised" />
       <recent name="E:\code\Semi-supervised-learning\config\classic_cv\semipt" />
-      <recent name="E:\code\Semi-supervised-learning\semilearn\algorithms\semipt" />
+      <recent name="E:\code\Semi-supervised-learning\config\classic_cv\freematch" />
+      <recent name="E:\code\Semi-supervised-learning\config\classic_cv\fixmatch" />
+      <recent name="E:\code\Semi-supervised-learning\config\classic_cv\softmatch" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.other">
+    <configuration name="other" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Semi-supervised-learning" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/semilearn/datasets/cv_datasets" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/semilearn/datasets/cv_datasets/other.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="train" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Semi-supervised-learning" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -81,6 +138,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.other" />
         <item itemvalue="Python.train" />
       </list>
     </recent_temporary>
@@ -105,6 +163,25 @@
       <workItem from="1720782497998" duration="23896000" />
       <workItem from="1721009184613" duration="2024000" />
       <workItem from="1721016459309" duration="4204000" />
+      <workItem from="1721267970008" duration="13025000" />
+      <workItem from="1721374935821" duration="6133000" />
+      <workItem from="1721438552315" duration="11863000" />
+      <workItem from="1721525963437" duration="11144000" />
+      <workItem from="1721616194918" duration="17769000" />
+      <workItem from="1721780435535" duration="13848000" />
+      <workItem from="1721863908082" duration="18996000" />
+      <workItem from="1721982793074" duration="6525000" />
+      <workItem from="1721996768001" duration="14431000" />
+      <workItem from="1722132644750" duration="35004000" />
+      <workItem from="1722257999541" duration="16664000" />
+      <workItem from="1722661162607" duration="804000" />
+      <workItem from="1722662380590" duration="5673000" />
+      <workItem from="1722735712133" duration="8864000" />
+      <workItem from="1722826278933" duration="758000" />
+      <workItem from="1723081848700" duration="850000" />
+      <workItem from="1723128849838" duration="17529000" />
+      <workItem from="1723250042350" duration="3852000" />
+      <workItem from="1723425751149" duration="326000" />
     </task>
     <task id="LOCAL-00001" summary="semipt v2.0 complete">
       <option name="closed" value="true" />
@@ -134,6 +211,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="semipt v2.0 complete and go home" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Semi_supervised_learning$train.coverage" NAME="train 覆盖结果" MODIFIED="1720863331783" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Semi_supervised_learning$other.coverage" NAME="other 覆盖结果" MODIFIED="1723171662176" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/semilearn/datasets/cv_datasets" />
+    <SUITE FILE_PATH="coverage/Semi_supervised_learning$train.coverage" NAME="train 覆盖结果" MODIFIED="1722247738397" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

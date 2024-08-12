@@ -6,8 +6,8 @@ load_path: ./saved_models/classic_cv/fixmatch_sun397_vpt_1_0/latest_model.pth
 overwrite: True
 use_tensorboard: True
 use_wandb: False
-epoch: 10
-num_train_iter: 10240
+epoch: 40
+num_train_iter: 40960
 num_eval_iter: 1024
 num_log_iter: 256
 num_labels: 397
@@ -42,7 +42,7 @@ rank: 0
 multiprocessing_distributed: False
 dist_url: tcp://127.0.0.1:10008
 dist_backend: nccl
-gpu: 4
+gpu: 2
 
 use_pretrain: True
 pretrain_path: /home/lhz/code/semi-pt/vit_base_patch16_224.augreg2_in21k_ft_in1k/pytorch_model.bin

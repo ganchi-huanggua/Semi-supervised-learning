@@ -59,6 +59,7 @@ def resize_pos_embed_vit(posemb, posemb_new, num_tokens=1, gs_new=()):
     # Rescale the grid of position embeddings when loading from state_dict. Adapted from
     # https://github.com/google-research/vision_transformer/blob/00883dd691c63a6830751563748663526e811cee/vit_jax/checkpoint.py#L224
     # _logger.info('Resized position embedding: %s to %s', posemb.shape, posemb_new.shape)
+    print('Resized position embedding: %s to %s', posemb.shape, posemb_new.shape)
     import math
     ntok_new = posemb_new.shape[1]
     if num_tokens:

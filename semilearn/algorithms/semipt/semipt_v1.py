@@ -13,7 +13,7 @@ from semilearn.algorithms.hooks import PseudoLabelingHook, FixedThresholdingHook
 from semilearn.algorithms.utils import SSL_Argument, str2bool
 
 
-@ALGORITHMS.register('semipt_v1')
+# @ALGORITHMS.register('semipt_v1')
 class SemiPT(AlgorithmBase):
     def __init__(self, args, net_builder, tb_log=None, logger=None):
         super().__init__(args, net_builder, tb_log, logger)

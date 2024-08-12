@@ -72,8 +72,8 @@ class FixMatch(AlgorithmBase):
                     outs_x_ulb_w = self.model(x_ulb_w)
                     logits_x_ulb_w = outs_x_ulb_w['logits']
                     feats_x_ulb_w = outs_x_ulb_w['feat']
-            # feat_dict = {'x_lb':feats_x_lb, 'x_ulb_w':feats_x_ulb_w, 'x_ulb_s':feats_x_ulb_s}
-            feat_dict = {}
+            feat_dict = {'x_lb':feats_x_lb, 'x_ulb_w':feats_x_ulb_w, 'x_ulb_s':feats_x_ulb_s}
+            # feat_dict = {}
 
             sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean')
 
@@ -99,12 +99,9 @@ class FixMatch(AlgorithmBase):
                                                pseudo_label,
                                                'ce',
                                                mask=mask)
-            if self.epoch < 5:
-                total_loss = sup_loss + self.lambda_u * unsup_loss
-            else:
-                total_loss = unsup_loss
+            total_loss = sup_loss + self.lambda_u * unsup_loss
         out_dict = self.process_out_dict(loss=total_loss, feat=feat_dict)
-        log_dict = self.process_log_dict(#sup_loss=sup_loss.item(),
+        log_dict = self.process_log_dict(sup_loss=sup_loss.item(),
                                          unsup_loss=unsup_loss.item(),
                                          total_loss=total_loss.item(),
                                          util_ratio=mask.float().mean().item())
