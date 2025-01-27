@@ -225,11 +225,12 @@ class AlgorithmBase:
         """
         if input_args is None:
             input_args = signature(self.train_step).parameters
-            input_args = list(input_args.keys())
-
+            input_args = list(input_args.keys())  # ['x_lb', 'y_lb', 'x_ulb_w', 'x_ulb_s']
         input_dict = {}
 
         for arg, var in kwargs.items():
+            # if arg == "idx_lb" or arg == "idx_ulb":
+            #     print(var)
             if not arg in input_args:
                 continue
             
@@ -306,7 +307,6 @@ class AlgorithmBase:
                 # prevent the training iterations exceed args.num_train_iter
                 if self.it >= self.num_train_iter:
                     break
-
                 self.call_hook("before_train_step")
                 self.out_dict, self.log_dict = self.train_step(**self.process_batch(**data_lb, **data_ulb))
                 self.call_hook("after_train_step")
