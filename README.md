@@ -44,7 +44,7 @@ pip install -r requirements.txt
 From now on, you can start FATE training:
 
 ```sh
-python train.py --c config/classic_cv/semipt/semipt_random2_cifar10_1_0.yaml.yaml
+python train.py --c config/classic_cv/semipt/semipt_random2_cifar10_1_0.yaml
 ```
 
 The detailed instructions for downloading and processing are shown in [Dataset Download](./preprocess/). Please follow it to download datasets before running or developing algorithms.
