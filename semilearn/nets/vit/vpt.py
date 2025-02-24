@@ -47,8 +47,7 @@ class VPT(VisionTransformer):
             param.requires_grad = True
 
 
-def vpt_on_vit_base_patch_16_224(pretrained=True, pretrained_path='/home/lhz/code/semi-pt/vit_base_patch16_224'
-                                                                  '.augreg2_in21k_ft_in1k/pytorch_model.bin', num_classes=1000):
+def vpt_on_vit_base_patch_16_224(pretrained=True, pretrained_path='/home/lhz/code/Semi-Supervised-Learning/vit_base_patch16_224.augreg2_in21k_ft_in1k/pytorch_model.bin', num_classes=1000):
 
     # insert_layers: 0 means shallow pt, [] means finetune a classifier
     model_kwargs = dict(prompt_length=12, prompt_init='uniform', insert_layers=[0])
@@ -59,13 +58,12 @@ def vpt_on_vit_base_patch_16_224(pretrained=True, pretrained_path='/home/lhz/cod
     return model
 
 
-def ftcls_on_vit_base_patch_16_224(pretrained=True, pretrained_path='/home/lhz/code/semi-pt/vit_base_patch16_224'
-                                                                  '.augreg2_in21k_ft_in1k/pytorch_model.bin', num_classes=1000):
+def ftcls_on_vit_base_patch_16_224(pretrained=True, pretrained_path='/home/lhz/code/Semi-Supervised-Learning/vit_base_patch16_224.augreg2_in21k_ft_in1k/pytorch_model.bin', num_classes=1000):
 
     # insert_layers: 0 means shallow pt, [] means finetune a classifier
     model_kwargs = dict(prompt_length=12, prompt_init='uniform', insert_layers=[])
     model = VPT(patch_size=16, embed_dim=768, depth=12, num_heads=12, drop_path_rate=0.2, num_classes=num_classes, **model_kwargs)
     if pretrained:
         model = load_checkpoint(model, pretrained_path)
-    model.freeze()
+    # model.freeze()
     return model

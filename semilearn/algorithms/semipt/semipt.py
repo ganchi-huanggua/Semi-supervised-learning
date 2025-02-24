@@ -51,14 +51,14 @@ class SemiPT(AlgorithmBase):
                                              total_loss=total_loss.item())
         # phase two, use labeled data to train another prompt, and use the prompts learned in the
         # first stage to constrain the updates of this prompt
-        elif 10 <= self.epoch < 60:
+        else:
             if self.change_state != 1:
                 self.model.simclr_prompt.requires_grad = False
                 # reset optimizer and scheduler
                 self.optimizer, self.scheduler = self.set_optimizer()
                 self.change_state = 1
             # upperbound: 64.24
-            outs_x_ulb_s = self.model(x_ulb_s_0, only_feat=False, projected=False, ce=True, simclr=False)
+            outs_x_ulb_s = self.model(x_ulb_s_0, only_feat=False, projected=False, ce=True, simclr=True)
             logits_x_ulb_s = outs_x_ulb_s['logits']
             feats_x_ulb_s = outs_x_ulb_s['feat']
 
@@ -85,15 +85,16 @@ class SemiPT(AlgorithmBase):
                 self.print_fn(self.labeled_count)
                 self.print_fn(self.correct_labeled_count)
 
-            outs_x_lb = self.model(x_lb, only_feat=False, projected=False, ce=True, simclr=True)
-            logits_x_lb = outs_x_lb['logits']
-            feats_x_lb = outs_x_lb['feat']
-            outs_x_lb_1 = self.model(x_lb, only_feat=False, projected=False, ce=True, simclr=False)
+            # outs_x_lb = self.model(x_lb, only_feat=False, projected=False, ce=True, simclr=True)
+            # logits_x_lb = outs_x_lb['logits']
+            # feats_x_lb = outs_x_lb['feat']
+            outs_x_lb_1 = self.model(x_lb, only_feat=False, projected=False, ce=True, simclr=True)
             logits_x_lb_1 = outs_x_lb_1['logits']
             feats_x_lb_1 = outs_x_lb_1['feat']
             feat_dict = {}
             unsup_loss = self.consistency_loss(logits_x_ulb_s, pseudo_label, 'ce', mask=mask)
-            sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean') + self.ce_loss(logits_x_lb_1, y_lb, reduction='mean')
+            # sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean') + self.ce_loss(logits_x_lb_1, y_lb, reduction='mean')
+            sup_loss = self.ce_loss(logits_x_lb_1, y_lb, reduction='mean')
             # simclr_prompt = self.model.simclr_prompt.detach()
             # unsup_loss = self.l2_similarity_loss(self.model.ce_prompt, simclr_prompt)
             total_loss = sup_loss + unsup_loss
@@ -103,9 +104,19 @@ class SemiPT(AlgorithmBase):
                                              unsup_loss=unsup_loss.item(),
                                              total_loss=total_loss.item(),
                                              util_ratio=mask.float().mean().item())
-        else:
-            out_dict = dict()
-            log_dict = dict()
+
+            # """ experiment """
+            # outs_x_lb = self.model(x_lb, only_feat=False, projected=False, ce=False, simclr=True)
+            # logits_x_lb = outs_x_lb['logits']
+            # feats_x_lb = outs_x_lb['feat']
+            # sup_loss = self.ce_loss(logits_x_lb, y_lb, reduction='mean')
+            # total_loss = sup_loss
+            # out_dict = self.process_out_dict(loss=total_loss, feat=feats_x_lb)
+            # log_dict = self.process_log_dict(sup_loss=sup_loss.item(),
+            #                                  # unsup_loss=unsup_loss.item(),
+            #                                  # util_ratio=mask.float().mean().item(),
+            #                                  total_loss=total_loss.item(),
+            #                                  )
         return out_dict, log_dict
 
     def evaluate(self, eval_dest='eval', out_key='logits', return_logits=False):
@@ -142,10 +153,8 @@ class SemiPT(AlgorithmBase):
 
                     num_batch = y.shape[0]
                     total_num += num_batch
-                    if self.change_state == 1:
-                        logits = self.model(x, simclr=True, ce=True)[out_key]
-                    else:
-                        logits = self.model(x, is_ce=False)[out_key]
+                    # fixme when ablation study goes.
+                    logits = self.model(x, simclr=True, ce=True)[out_key]
                     loss = F.cross_entropy(logits, y, reduction='mean', ignore_index=-1)
                     y_true.extend(y.cpu().tolist())
                     y_pred.extend(torch.max(logits, dim=-1)[1].cpu().tolist())
@@ -198,7 +207,7 @@ class SemiPT(AlgorithmBase):
                 self.scheduler.load_state_dict(checkpoint['scheduler'])
 
         else:
-            pretrained_dict = {k: v for k, v in checkpoint['model'].items() if 'simclr_prompt' in k}
+            pretrained_dict = {k: v for k, v in checkpoint['model'].items() if 'simclr_prompt' or 'projector' in k}
             match = self.model.load_state_dict(pretrained_dict, strict=False)
             self.loss_scaler.load_state_dict(checkpoint['loss_scaler'])
 

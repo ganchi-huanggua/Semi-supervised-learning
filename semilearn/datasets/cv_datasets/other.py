@@ -61,7 +61,7 @@ def get_other_dset(args, alg, dataset, num_labels, num_classes, data_dir='./data
     # test_dataset = iNatDataset(alg, data_dir, 'test', dataset, transform=transform_val)
 
     if dataset == "sun397":
-        dset = datasets.SUN397("/home/lhz/data", download=True)
+        dset = datasets.SUN397("/home/lhz/data/sun397", download=False)
         data, targets = dset._image_files, dset._labels
 
         data, targets = np.asarray(data), np.asarray(targets)
@@ -83,7 +83,7 @@ def get_other_dset(args, alg, dataset, num_labels, num_classes, data_dir='./data
         test_data, test_targets = np.concatenate(test_data, axis=0), np.concatenate(test_targets, axis=0)
 
     elif dataset == "cub":
-        dataset_dir = "/home/lhz/data/CUB/CUB_200_2011/images"
+        dataset_dir = "/home/lhz/data/CUB_200_2011/images"
         dset = datasets.ImageFolder(dataset_dir)
         data, targets = split_images_labels(dset.imgs)
 
